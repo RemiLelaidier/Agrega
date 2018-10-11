@@ -180,6 +180,9 @@ class App extends React.Component<any, AppState> {
   submitNewCategory(data: any) {
     console.log('new category ' + data);
     this.setState({modal: ModalType.none});
+    data.id = Date.now();
+    data.ressources = [];
+    this.db.categories.insert(data);
   }
 }
 

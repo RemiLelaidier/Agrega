@@ -1,7 +1,7 @@
 import { RxJsonSchema }  from 'rxdb';
 
 export const category: RxJsonSchema = {
-    description: "describes a simple hero",
+    description: "Category description",
     version: 0,
     title: "category",
     type: "object",

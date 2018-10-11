@@ -59,7 +59,7 @@ class NewCategoryModal extends React.Component<NewCategoryModalProps, NewCategor
                     <p>Couleur</p>
                     <ChromePicker  
                         color={this.state.color}
-                        onChangeComplete={this.handleColorChange}
+                        onChangeComplete={this.handleColorChange()}
                     />
                 </DialogContent>
                 <DialogActions>
@@ -85,6 +85,7 @@ class NewCategoryModal extends React.Component<NewCategoryModalProps, NewCategor
     }
 
     handleColorChange = () => (color: any) => {
+        console.log(color);
         this.setState({
             color: color.hex
         })
