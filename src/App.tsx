@@ -2,11 +2,24 @@ import * as React from 'react';
 import { RxDatabase } from 'rxdb';
 import { Subscription } from 'rxjs';
 
+import Drawer from '@material-ui/core/Drawer';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
+
 import './App.css';
 
 import Database from './database/Database';
 
-class App extends React.Component {
+interface AppState {
+  categories: Object,
+  drawer: boolean
+}
+
+class App extends React.Component<any, AppState> {
 
   private db: RxDatabase;
   private subscriptions: Subscription[];
@@ -16,7 +29,8 @@ class App extends React.Component {
   constructor(props: any) {
     super(props);
     this.state = {
-      categories: {}
+      categories: {},
+      drawer: false
     }
     this.subscriptions = [];
   }
@@ -67,14 +81,44 @@ class App extends React.Component {
   public render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.tsx</code> and save to reload.
-        </p>
+        <AppBar position="static">
+          <Toolbar>
+            <IconButton className="menuButton" color="inherit" aria-label="Menu" onClick={this.toggleDrawer()}>
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" color="inherit" className="grow">
+              Agrégat-Info
+            </Typography>
+            <Button color="inherit">Connexion</Button>
+          </Toolbar>
+        </AppBar>
+
+        <Drawer open={this.state.drawer} onClose={this.toggleDrawer()}>
+          <div
+            tabIndex={0}
+            role="button"
+            onClick={this.toggleDrawer()}
+            onKeyDown={this.toggleDrawer()}
+          >
+            {this.renderDrawer()}
+          </div>
+        </Drawer>
       </div>
     );
+  }
+
+  private renderDrawer() {
+    return (
+      <div>
+        <p>salut</p>
+      </div>
+    );
+  }
+
+  private toggleDrawer = () => () => {
+    this.setState({
+      drawer: !this.state.drawer
+    })
   }
 }
 
