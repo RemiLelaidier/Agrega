@@ -16,10 +16,18 @@ import './App.css';
 
 import Database from './database/Database';
 import CategotyCard from './components/ui/CategoryCard';
+import NewCategoryModal from './components/ui/NewCategoryModal';
+
+export enum ModalType {
+  none = 'none',
+  newCategory = 'newCategory',
+  newArticle = 'newArticle'
+}
 
 interface AppState {
-  categories: Object,
-  drawer: boolean
+  categories: Object;
+  drawer: boolean;
+  modal: ModalType;
 }
 
 class App extends React.Component<any, AppState> {
@@ -33,9 +41,13 @@ class App extends React.Component<any, AppState> {
     super(props);
     this.state = {
       categories: {},
-      drawer: false
+      drawer: false,
+      modal: ModalType.none
     }
     this.subscriptions = [];
+
+    this.openModal = this.openModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
   }
 
   /**
@@ -108,11 +120,16 @@ class App extends React.Component<any, AppState> {
         </Drawer>
 
         <GridList cellHeight={160} cols={3}>
-          <GridListTile cols={1}> 
-            <CategotyCard category={null} />
-          </GridListTile>
           {this.renderCategories()}
+          <GridListTile cols={1}> 
+            <CategotyCard 
+              category={null}
+              onClick={this.openModal}
+            />
+          </GridListTile>
         </GridList>
+
+        {this.renderModal()}
 
       </div>
     );
@@ -134,10 +151,29 @@ class App extends React.Component<any, AppState> {
     }*/
   }
 
+  private renderModal() {
+    switch(this.state.modal) {
+      case ModalType.newCategory:
+        return <NewCategoryModal onClose={this.closeModal}/>;
+      default:
+        return;
+    }
+  }
+
   private toggleDrawer = () => () => {
     this.setState({
       drawer: !this.state.drawer
     })
+  }
+
+  openModal(type: ModalType) {
+    console.log('activate modal' + type);
+    this.setState({modal: type});
+  }
+
+  closeModal() {
+    console.log('close modal');
+    this.setState({modal: ModalType.none});
   }
 }
 

@@ -5,9 +5,11 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import CardActions from '@material-ui/core/CardActions';
 import Button from '@material-ui/core/Button';
+import { ModalType } from 'src/App';
 
 export interface CategoryCardProps {
-    category: any
+    category: any;
+    onClick?: (any);
 }
 
 class CategoryCard extends React.Component<CategoryCardProps> {
@@ -31,8 +33,12 @@ class CategoryCard extends React.Component<CategoryCardProps> {
         if(this.props.category) {
             return <Button size="small">Accéder à la categorie</Button>;
         } else {
-            return <Button>Nouvelle catégorie</Button>
+            return <Button onClick={this.onClick()}>Nouvelle catégorie</Button>
         }
+    }
+
+    onClick = () => () => {
+        this.props.onClick(ModalType.newCategory);
     }
 }
 
