@@ -9,10 +9,10 @@ RxDB.plugin(require('pouchdb-adapter-http'));
 
 export default class Database {
 
-    public static async create() {
+    public static async create(dbName: string) {
         // Create DB
         const db: RxDatabase = await RxDB.create({
-            name: "agrega",
+            name: dbName,
             adapter: 'idb', 
             password: '12345678'
         });
@@ -22,8 +22,6 @@ export default class Database {
             name: 'categories',
             schema: category
         });
-
-        // ReplicationState TODOXXX
 
         return db;
     }

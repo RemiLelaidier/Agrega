@@ -10,6 +10,8 @@ class App extends React.Component {
 
   private db: RxDatabase;
   private subscriptions: Subscription[];
+  private syncUrl: string = "http://localhost:5984/";
+  private dbName: string = "agrega";
 
   constructor(props: any) {
     super(props);
@@ -25,7 +27,7 @@ class App extends React.Component {
    * @memberof App
    */
   public async componentDidMount() {
-    this.db = await Database.create();
+    this.db = await Database.create(this.dbName);
 
     const sub: Subscription = this.db.categories.find().sort({id: 1}).$.subscribe(categories => {
       if(!categories) {
@@ -35,6 +37,25 @@ class App extends React.Component {
     });
 
     this.subscriptions.push(sub);
+
+    // ReplicationState
+    const replicationState = this.db.categories.sync({remote: this.syncUrl + this.dbName + '/'});
+
+    this.subscriptions.push(
+      replicationState.change$.subscribe(change => console.dir(`change - ${change}`))
+    );
+    this.subscriptions.push(
+      replicationState.docs$.subscribe(docData => console.dir(`docs - ${docData}`))
+    );
+    this.subscriptions.push(
+      replicationState.active$.subscribe(active => console.dir(`active - ${active}`))
+    );
+    this.subscriptions.push(
+      replicationState.complete$.subscribe(completed => console.dir(`completed - ${completed}`))
+    );
+    this.subscriptions.push(
+      replicationState.error$.subscribe(error => console.dir(`error - ${error}`))
+    );
   }
 
   /**
