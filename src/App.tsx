@@ -48,6 +48,7 @@ class App extends React.Component<any, AppState> {
 
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
+    this.submitNewCategory = this.submitNewCategory.bind(this);
   }
 
   /**
@@ -154,7 +155,7 @@ class App extends React.Component<any, AppState> {
   private renderModal() {
     switch(this.state.modal) {
       case ModalType.newCategory:
-        return <NewCategoryModal onClose={this.closeModal}/>;
+        return <NewCategoryModal onClose={this.closeModal} onSubmit={this.submitNewCategory}/>;
       default:
         return;
     }
@@ -173,6 +174,11 @@ class App extends React.Component<any, AppState> {
 
   closeModal() {
     console.log('close modal');
+    this.setState({modal: ModalType.none});
+  }
+
+  submitNewCategory(data: any) {
+    console.log('new category ' + data);
     this.setState({modal: ModalType.none});
   }
 }
