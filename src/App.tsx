@@ -9,10 +9,13 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import GridList from '@material-ui/core/GridList';
+import GridListTile from '@material-ui/core/GridListTile';
 
 import './App.css';
 
 import Database from './database/Database';
+import CategotyCard from './components/ui/CategoryCard';
 
 interface AppState {
   categories: Object,
@@ -103,6 +106,14 @@ class App extends React.Component<any, AppState> {
             {this.renderDrawer()}
           </div>
         </Drawer>
+
+        <GridList cellHeight={160} cols={3}>
+          <GridListTile cols={1}> 
+            <CategotyCard category={null} />
+          </GridListTile>
+          {this.renderCategories()}
+        </GridList>
+
       </div>
     );
   }
@@ -113,6 +124,14 @@ class App extends React.Component<any, AppState> {
         <p>salut</p>
       </div>
     );
+  }
+
+  private renderCategories() {
+    /*if(this.state.categories.length > 0 ) {
+      return <CategoriesList />;
+    } else {
+      return <EmptyList />
+    }*/
   }
 
   private toggleDrawer = () => () => {
