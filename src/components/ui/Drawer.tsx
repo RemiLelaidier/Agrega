@@ -7,6 +7,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 import NoteAddIcon from '@material-ui/icons/NoteAdd';
 import Drawer from '@material-ui/core/Drawer';
+import { ModalType } from 'src/App';
 
 interface AppDrawerProps {
     open: boolean;
@@ -26,7 +27,7 @@ class AppDrawer extends React.Component<AppDrawerProps> {
                     onKeyDown={this.toggle()}
                 >
                     <List>
-                        <ListItem button={true}>
+                        <ListItem button={true} onClick={this.openModal()}>
                             <ListItemIcon>
                                 <NoteAddIcon />
                             </ListItemIcon>
@@ -42,6 +43,10 @@ class AppDrawer extends React.Component<AppDrawerProps> {
 
     toggle = () => () => {
         this.props.toggle();
+    }
+
+    openModal = () => () => {
+        this.props.onSelect(ModalType.newArticle);
     }
 }
 

@@ -8,10 +8,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { ChromePicker } from 'react-color';
 
-interface NewCategoryModalProps {
-    onClose: (any);
-    onSubmit: (any);
-}
+import { ModalProps } from './type';
 
 interface NewCategoryModalState {
     name: string;
@@ -20,9 +17,9 @@ interface NewCategoryModalState {
     openPicker: boolean;
 }
 
-class NewCategoryModal extends React.Component<NewCategoryModalProps, NewCategoryModalState> {
+class NewCategoryModal extends React.Component<ModalProps, NewCategoryModalState> {
 
-    constructor(props: NewCategoryModalProps) {
+    constructor(props: ModalProps) {
         super(props);
         this.state = {
             name: "",

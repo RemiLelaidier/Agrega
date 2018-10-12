@@ -4,7 +4,6 @@ import { Subscription } from 'rxjs';
 
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -15,8 +14,9 @@ import './App.css';
 
 import Database from './database/Database';
 import CategotyCard from './components/ui/CategoryCard';
-import NewCategoryModal from './components/ui/NewCategoryModal';
+import NewCategoryModal from './components/ui/modals/NewCategoryModal';
 import AppDrawer from './components/ui/Drawer';
+import NewArticleModal from './components/ui/modals/NewArticleModal';
 
 export enum ModalType {
   none = 'none',
@@ -103,14 +103,18 @@ class App extends React.Component<any, AppState> {
             <IconButton className="menuButton" color="inherit" aria-label="Menu" onClick={this.toggle()}>
               <MenuIcon />
             </IconButton>
-            <Typography variant="h6" color="inherit" className="grow">
+            <h6>
               Agrégat-Info
-            </Typography>
+            </h6>
             <Button color="inherit">Connexion</Button>
           </Toolbar>
         </AppBar>
 
-        <AppDrawer open={this.state.drawer} toggle={this.toggleDrawer} />
+        <AppDrawer 
+          open={this.state.drawer} 
+          toggle={this.toggleDrawer} 
+          onSelect={this.openModal}
+        />
 
         <GridList cellHeight={160} cols={3}>
           {this.renderCategories()}
@@ -147,6 +151,8 @@ class App extends React.Component<any, AppState> {
     switch(this.state.modal) {
       case ModalType.newCategory:
         return <NewCategoryModal onClose={this.closeModal} onSubmit={this.submitNewCategory}/>;
+      case ModalType.newArticle:
+        return <NewArticleModal onClose={this.closeModal} onSubmit={this.submitNewCategory}/>
       default:
         return;
     }
