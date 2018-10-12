@@ -15,14 +15,7 @@ class CategoryCard extends React.Component<CategoryCardProps> {
 
     render() {
         return(
-            <Card className="card">
-                <CardContent>
-                    {this.renderContent()}
-                </CardContent>
-                <CardActions>
-                    {this.renderButton()}
-                </CardActions>
-            </Card>
+            this.renderCard()
         );
     }
 
@@ -36,9 +29,44 @@ class CategoryCard extends React.Component<CategoryCardProps> {
 
     private renderContent() {
         if(this.props.category) {
-            return <p>Nom : {this.props.category.name}<br/>Desc : {this.props.category.description}<br/>Couleur : {this.props.category.color}</p>
+            return (
+                <div>
+                    <h3>{this.props.category.name}</h3>
+                    <h4>{this.props.category.description}</h4>
+                    <p>{this.props.category.ressources.length} articles</p>
+                </div>
+            );
         }
         return;
+    }
+
+    private renderCard() {
+        if(this.props.category) {
+            const color: React.CSSProperties = {
+                backgroundColor: this.props.category.color
+            }
+            return (
+                <Card className="card" style={color}>
+                    <CardContent>
+                        {this.renderContent()}
+                    </CardContent>
+                    <CardActions>
+                        {this.renderButton()}
+                    </CardActions>
+                </Card>
+            );
+        } else {
+            return (
+                <Card className="card">
+                <CardContent>
+                    {this.renderContent()}
+                </CardContent>
+                <CardActions>
+                    {this.renderButton()}
+                </CardActions>
+            </Card>
+            );
+        }
     }
 
     onClick = () => () => {
