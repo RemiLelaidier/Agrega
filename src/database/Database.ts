@@ -10,11 +10,15 @@ RxDB.plugin(require('pouchdb-adapter-http'));
 export default class Database {
 
     public static async create(dbName: string) {
+        // Clean previous Base if needed
+        await RxDB.removeDatabase(dbName, 'idb');
+
         // Create DB
         const db: RxDatabase = await RxDB.create({
             name: dbName,
             adapter: 'idb', 
-            password: '12345678'
+            password: '12345678',
+            multiInstance: false
         });
 
         // Create collections
