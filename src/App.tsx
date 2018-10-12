@@ -2,7 +2,6 @@ import * as React from 'react';
 import { RxDatabase } from 'rxdb';
 import { Subscription } from 'rxjs';
 
-import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -11,18 +10,13 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Divider from '@material-ui/core/Divider';
-import NoteAddIcon from '@material-ui/icons/NoteAdd';
 
 import './App.css';
 
 import Database from './database/Database';
 import CategotyCard from './components/ui/CategoryCard';
 import NewCategoryModal from './components/ui/NewCategoryModal';
+import AppDrawer from './components/ui/Drawer';
 
 export enum ModalType {
   none = 'none',
@@ -55,6 +49,7 @@ class App extends React.Component<any, AppState> {
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this.submitNewCategory = this.submitNewCategory.bind(this);
+    this.toggleDrawer = this.toggleDrawer.bind(this);
   }
 
   /**
@@ -105,7 +100,7 @@ class App extends React.Component<any, AppState> {
       <div className="App">
         <AppBar position="static">
           <Toolbar>
-            <IconButton className="menuButton" color="inherit" aria-label="Menu" onClick={this.toggleDrawer()}>
+            <IconButton className="menuButton" color="inherit" aria-label="Menu" onClick={this.toggle()}>
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" color="inherit" className="grow">
@@ -115,16 +110,7 @@ class App extends React.Component<any, AppState> {
           </Toolbar>
         </AppBar>
 
-        <Drawer open={this.state.drawer} onClose={this.toggleDrawer()}>
-          <div
-            tabIndex={0}
-            role="button"
-            onClick={this.toggleDrawer()}
-            onKeyDown={this.toggleDrawer()}
-          >
-            {this.renderDrawer()}
-          </div>
-        </Drawer>
+        <AppDrawer open={this.state.drawer} toggle={this.toggleDrawer} />
 
         <GridList cellHeight={160} cols={3}>
           {this.renderCategories()}
@@ -139,22 +125,6 @@ class App extends React.Component<any, AppState> {
         {this.renderModal()}
 
       </div>
-    );
-  }
-
-  private renderDrawer() {
-    return (
-      <>
-        <List>
-        <ListItem button={true}>
-          <ListItemIcon>
-            <NoteAddIcon />
-          </ListItemIcon>
-          <ListItemText primary="Nouvelle ressource" />
-        </ListItem>
-        </List>
-        <Divider/>
-      </>
     );
   }
 
@@ -182,10 +152,14 @@ class App extends React.Component<any, AppState> {
     }
   }
 
-  private toggleDrawer = () => () => {
+  private toggleDrawer() {
     this.setState({
       drawer: !this.state.drawer
     })
+  }
+
+  private toggle = () => () => {
+    this.toggleDrawer();
   }
 
   openModal(type: ModalType) {
