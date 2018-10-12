@@ -11,6 +11,12 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import Divider from '@material-ui/core/Divider';
+import NoteAddIcon from '@material-ui/icons/NoteAdd';
 
 import './App.css';
 
@@ -138,9 +144,17 @@ class App extends React.Component<any, AppState> {
 
   private renderDrawer() {
     return (
-      <div>
-        <p>salut</p>
-      </div>
+      <>
+        <List>
+        <ListItem button={true}>
+          <ListItemIcon>
+            <NoteAddIcon />
+          </ListItemIcon>
+          <ListItemText primary="Nouvelle ressource" />
+        </ListItem>
+        </List>
+        <Divider/>
+      </>
     );
   }
 
