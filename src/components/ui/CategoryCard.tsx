@@ -2,7 +2,6 @@ import * as React from 'react';
 
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
 import CardActions from '@material-ui/core/CardActions';
 import Button from '@material-ui/core/Button';
 import { ModalType } from 'src/App';
@@ -18,9 +17,7 @@ class CategoryCard extends React.Component<CategoryCardProps> {
         return(
             <Card className="card">
                 <CardContent>
-                    <Typography className="title" color="textSecondary">
-                    Word of the Day
-                    </Typography>
+                    {this.renderContent()}
                 </CardContent>
                 <CardActions>
                     {this.renderButton()}
@@ -35,6 +32,13 @@ class CategoryCard extends React.Component<CategoryCardProps> {
         } else {
             return <Button onClick={this.onClick()}>Nouvelle catégorie</Button>
         }
+    }
+
+    private renderContent() {
+        if(this.props.category) {
+            return <p>Nom : {this.props.category.name}<br/>Desc : {this.props.category.description}<br/>Couleur : {this.props.category.color}</p>
+        }
+        return;
     }
 
     onClick = () => () => {

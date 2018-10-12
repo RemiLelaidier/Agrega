@@ -56,7 +56,7 @@ class App extends React.Component<any, AppState> {
    *
    * @memberof App
    */
-  public async componentDidMount() {
+  public async componentWillMount() {
     this.db = await Database.create(this.dbName);
 
     const sub: Subscription = this.db.categories.find().sort({id: 1}).$.subscribe(categories => {
@@ -145,11 +145,18 @@ class App extends React.Component<any, AppState> {
   }
 
   private renderCategories() {
-    /*if(this.state.categories.length > 0 ) {
-      return <CategoriesList />;
-    } else {
-      return <EmptyList />
-    }*/
+    if(Object.keys(this.state.categories).length > 0) {
+      return (this.state.categories as any).map((category: any) => {
+        return (
+          <GridListTile cols={1} key={category.id}> 
+            <CategotyCard 
+              category={category}
+              onClick={this.openModal}
+            />
+          </GridListTile>
+        );
+      });
+    }
   }
 
   private renderModal() {
@@ -177,12 +184,12 @@ class App extends React.Component<any, AppState> {
     this.setState({modal: ModalType.none});
   }
 
-  submitNewCategory(data: any) {
+  async submitNewCategory(data: any) {
     console.log('new category ' + data);
     this.setState({modal: ModalType.none});
-    data.id = Date.now();
+    data.id = Date.now().toString();
     data.ressources = [];
-    this.db.categories.insert(data);
+    await this.db.categories.insert(data);
   }
 }
 
