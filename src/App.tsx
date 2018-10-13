@@ -190,7 +190,22 @@ class App extends React.Component<any, AppState> {
   async submitNewRessource(data: any) {
     console.log('new ressource ' + data);
     this.setState({modal: ModalType.none});
-    // TODO
+    data.categories.forEach(async (category: string) => {
+      const document = await this.db.categories.findOne().where('name').eq(category).exec();
+      const collection = {
+        id: document.id,
+        description: document.description,
+        color: document.color,
+        name: document.name,
+        ressources: [...document.ressources, {
+          name: data.name,
+          description: data.description,
+          url: data.url,
+          added: 'user'
+        }]
+      }
+      await this.db.categories.atomicUpsert(collection);
+    });
   }
 }
 
