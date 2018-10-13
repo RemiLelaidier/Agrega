@@ -10,13 +10,13 @@ import MenuIcon from '@material-ui/icons/Menu';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 
-import './App.css';
-
 import Database from './database/Database';
 import CategotyCard from './components/ui/CategoryCard';
 import NewCategoryModal from './components/ui/modals/NewCategoryModal';
 import AppDrawer from './components/ui/Drawer';
 import NewArticleModal from './components/ui/modals/NewArticleModal';
+
+import './App.css';
 
 export enum ModalType {
   none = 'none',
@@ -49,6 +49,7 @@ class App extends React.Component<any, AppState> {
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this.submitNewCategory = this.submitNewCategory.bind(this);
+    this.submitNewRessource = this.submitNewRessource.bind(this);
     this.toggleDrawer = this.toggleDrawer.bind(this);
   }
 
@@ -152,7 +153,7 @@ class App extends React.Component<any, AppState> {
       case ModalType.newCategory:
         return <NewCategoryModal onClose={this.closeModal} onSubmit={this.submitNewCategory}/>;
       case ModalType.newArticle:
-        return <NewArticleModal onClose={this.closeModal} onSubmit={this.submitNewCategory} categories={this.state.categories}/>;
+        return <NewArticleModal onClose={this.closeModal} onSubmit={this.submitNewRessource} categories={this.state.categories}/>;
       default:
         return;
     }
@@ -184,6 +185,12 @@ class App extends React.Component<any, AppState> {
     data.id = Date.now().toString();
     data.ressources = [];
     await this.db.categories.insert(data);
+  }
+
+  async submitNewRessource(data: any) {
+    console.log('new ressource ' + data);
+    this.setState({modal: ModalType.none});
+    // TODO
   }
 }
 

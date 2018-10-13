@@ -6,6 +6,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import { FormControl } from '@material-ui/core';
 import { ChromePicker } from 'react-color';
 
 import { ModalProps } from './type';
@@ -37,27 +38,29 @@ class NewCategoryModal extends React.Component<ModalProps, NewCategoryModalState
             >
                 <DialogTitle id="simple-dialog-title">Nouvelle catégorie</DialogTitle>
                 <DialogContent>
-                    <TextField
-                        required={true}
-                        id="standard-required"
-                        label="Nom"
-                        value={this.state.name}
-                        onChange={this.handleChange('name')}
-                        margin="normal"
-                    />
-                    <TextField
-                        required={true}
-                        id="standard-required"
-                        label="Description"
-                        value={this.state.description}
-                        onChange={this.handleChange('description')}
-                        margin="normal"
-                    />
-                    <p>Couleur</p>
-                    <ChromePicker  
-                        color={this.state.color}
-                        onChangeComplete={this.handleColorChange()}
-                    />
+                    <FormControl>
+                        <TextField
+                            required={true}
+                            id="standard-required"
+                            label="Nom"
+                            value={this.state.name}
+                            onChange={this.handleChange('name')}
+                            margin="normal"
+                        />
+                        <TextField
+                            required={false}
+                            id="standard-required"
+                            label="Description"
+                            value={this.state.description}
+                            onChange={this.handleChange('description')}
+                            margin="normal"
+                        />
+                        <p>Couleur</p>
+                        <ChromePicker  
+                            color={this.state.color}
+                            onChangeComplete={this.handleColorChange()}
+                        />
+                    </FormControl>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={this.handleClose()} color="primary">
