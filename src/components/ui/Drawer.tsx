@@ -7,6 +7,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 import NoteAddIcon from '@material-ui/icons/NoteAdd';
 import ReorderIcon from '@material-ui/icons/Reorder';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import SettingsPowerIcon from '@material-ui/icons/SettingsPower';
 import Drawer from '@material-ui/core/Drawer';
 import { ModalType } from 'src/App';
 
@@ -42,6 +44,20 @@ class AppDrawer extends React.Component<AppDrawerProps> {
                         </ListItem>
                     </List>
                     <Divider/>
+                    <List>
+                        <ListItem button={true}>
+                            <ListItemIcon>
+                                <AccountCircleIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Compte"/>
+                        </ListItem>
+                        <ListItem button={true}>
+                            <ListItemIcon>
+                                <SettingsPowerIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Déconnexion"/>
+                        </ListItem>
+                    </List>
                 </div>
             </Drawer>
             </>
