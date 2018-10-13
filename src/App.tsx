@@ -116,7 +116,7 @@ class App extends React.Component<any, AppState> {
           onSelect={this.openModal}
         />
 
-        <GridList cellHeight={160} cols={3}>
+        <GridList cellHeight={160} cols={6}>
           {this.renderCategories()}
           <GridListTile cols={1}> 
             <CategotyCard 
@@ -152,7 +152,7 @@ class App extends React.Component<any, AppState> {
       case ModalType.newCategory:
         return <NewCategoryModal onClose={this.closeModal} onSubmit={this.submitNewCategory}/>;
       case ModalType.newArticle:
-        return <NewArticleModal onClose={this.closeModal} onSubmit={this.submitNewCategory}/>
+        return <NewArticleModal onClose={this.closeModal} onSubmit={this.submitNewCategory} categories={this.state.categories}/>;
       default:
         return;
     }
