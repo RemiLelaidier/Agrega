@@ -1,0 +1,11 @@
+.form-control {
+    width: 500px;
+}
+
+.title {
+    margin-bottom: 45px;
+}
+
+label {
+    position: relative !important;
+}

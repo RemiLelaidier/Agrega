@@ -9,6 +9,7 @@ import NoteAddIcon from '@material-ui/icons/NoteAdd';
 import ReorderIcon from '@material-ui/icons/Reorder';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import SettingsPowerIcon from '@material-ui/icons/SettingsPower';
+import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 import Drawer from '@material-ui/core/Drawer';
 import { ModalType } from 'src/App';
 
@@ -41,6 +42,12 @@ class AppDrawer extends React.Component<AppDrawerProps> {
                                 <ReorderIcon />
                             </ListItemIcon>
                             <ListItemText primary="Nouvelle catégorie" />
+                        </ListItem>
+                        <ListItem button={true}>
+                            <ListItemIcon>
+                                <RemoveCircleIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Sources non fiables" />
                         </ListItem>
                     </List>
                     <Divider/>

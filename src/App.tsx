@@ -9,6 +9,8 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core';
+import { purple } from '@material-ui/core/colors';
 
 import Database from './database/Database';
 import CategotyCard from './components/ui/CategoryCard';
@@ -97,38 +99,44 @@ class App extends React.Component<any, AppState> {
    * @memberof App
    */
   public render() {
+    const theme = createMuiTheme({
+      palette: {
+        primary: { main: purple[500] }, // Purple and green play nicely together.
+        secondary: { main: '#11cb5f' }, // This is just green.A700 as hex.
+      },
+    });
+
     return (
       <div className="App">
-        <AppBar position="static">
-          <Toolbar>
-            <IconButton className="menuButton" color="inherit" aria-label="Menu" onClick={this.toggle()}>
-              <MenuIcon />
-            </IconButton>
-            <h6>
-              Agrégat-Info
-            </h6>
-            <Button color="inherit">Connexion</Button>
-          </Toolbar>
-        </AppBar>
+        <MuiThemeProvider theme={theme}>
+          <AppBar position="static">
+            <Toolbar>
+              <IconButton className="menuButton" color="inherit" aria-label="Menu" onClick={this.toggle()}>
+                <MenuIcon />
+              </IconButton>
+              <h6>Agrégat-Info</h6>
+              <Button color="inherit">Connexion</Button>
+            </Toolbar>
+          </AppBar>
 
-        <AppDrawer 
-          open={this.state.drawer} 
-          toggle={this.toggleDrawer} 
-          onSelect={this.openModal}
-        />
+          <AppDrawer 
+            open={this.state.drawer} 
+            toggle={this.toggleDrawer} 
+            onSelect={this.openModal}
+          />
 
-        <GridList cellHeight={160} cols={6}>
-          {this.renderCategories()}
-          <GridListTile cols={1}> 
-            <CategotyCard 
-              category={null}
-              onClick={this.openModal}
-            />
-          </GridListTile>
-        </GridList>
+          <GridList cellHeight={160} cols={6}>
+            {this.renderCategories()}
+            <GridListTile cols={1}> 
+              <CategotyCard 
+                category={null}
+                onClick={this.openModal}
+              />
+            </GridListTile>
+          </GridList>
 
-        {this.renderModal()}
-
+          {this.renderModal()}
+        </MuiThemeProvider>
       </div>
     );
   }
