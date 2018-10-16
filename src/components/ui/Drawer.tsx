@@ -6,7 +6,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 import NoteAddIcon from '@material-ui/icons/NoteAdd';
-import ReorderIcon from '@material-ui/icons/Reorder';
+import CreateNewFolderIcon from '@material-ui/icons/CreateNewFolder';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import SettingsPowerIcon from '@material-ui/icons/SettingsPower';
 import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
@@ -39,7 +39,7 @@ class AppDrawer extends React.Component<AppDrawerProps> {
                         </ListItem>
                         <ListItem button={true} onClick={this.openModal(ModalType.newCategory)}>
                             <ListItemIcon>
-                                <ReorderIcon />
+                                <CreateNewFolderIcon />
                             </ListItemIcon>
                             <ListItemText primary="Nouvelle catégorie" />
                         </ListItem>
