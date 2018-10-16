@@ -6,6 +6,9 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import IconButton from '@material-ui/core/IconButton';
+import ClearIcon from '@material-ui/icons/Clear';
 import MicrolinkCard from 'react-microlink';
 
 import { ModalProps } from './type';
@@ -92,8 +95,8 @@ class NewArticleModal extends React.Component<NewArticleModalProps, NewArticleMo
                             onChange={this.handleChange('url')}
                             margin="normal"
                         />
+                        {this.renderPreview()}
                     </FormControl>
-                    {this.renderPreview()}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={this.handleClose()} color="primary">
@@ -145,20 +148,28 @@ class NewArticleModal extends React.Component<NewArticleModalProps, NewArticleMo
     renderPreview() {
         if(this.state.url) {
             return (
-                <MicrolinkCard 
-                    key="preview-card"
-                    className="info-card"
-                    url={this.state.url}
-                    force={true}
-                    onChange={this.show()}
-                />
+                <Grid container={true} spacing={8}>
+                    <Grid item={true} xs={11}>
+                        <MicrolinkCard 
+                            key="preview-card"
+                            className="info-card"
+                            url={this.state.url}
+                            force={true}
+                        />
+                    </Grid>
+                    <Grid item={true} xs={1}>
+                        <IconButton aria-label="Delete" onClick={this.clearUrl()}>
+                            <ClearIcon />
+                        </IconButton>
+                    </Grid>
+                </Grid>
             );
         }
         return;
     }
 
-    show= () => () => {
-        console.log('render');
+    clearUrl = () => () => {
+        this.setState({url: ''});
     }
 }
 
