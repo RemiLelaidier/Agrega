@@ -163,6 +163,13 @@ class App extends React.Component<any, AppState> {
     }
   }
 
+  /**
+   * Dynamically render Modal
+   *
+   * @private
+   * @returns
+   * @memberof App
+   */
   private renderModal() {
     switch(this.state.modal) {
       case ModalType.newCategory:
@@ -184,16 +191,33 @@ class App extends React.Component<any, AppState> {
     this.toggleDrawer();
   }
 
+  /**
+   * Open Modal
+   *
+   * @param {ModalType} type
+   * @memberof App
+   */
   openModal(type: ModalType) {
     console.log('activate modal' + type);
     this.setState({modal: type});
   }
 
+  /**
+   * CLose Modal
+   *
+   * @memberof App
+   */
   closeModal() {
     console.log('close modal');
     this.setState({modal: ModalType.none});
   }
 
+  /**
+   * Submit a new category into database
+   *
+   * @param {*} data
+   * @memberof App
+   */
   async submitNewCategory(data: any) {
     console.log('new category ' + data);
     this.setState({modal: ModalType.none});
@@ -202,6 +226,12 @@ class App extends React.Component<any, AppState> {
     await this.db.categories.insert(data);
   }
 
+  /**
+   * Submit new ressource into the database
+   *
+   * @param {*} data
+   * @memberof App
+   */
   async submitNewRessource(data: any) {
     console.log('new ressource ' + data);
     this.setState({modal: ModalType.none});

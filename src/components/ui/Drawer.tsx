@@ -37,12 +37,14 @@ class AppDrawer extends React.Component<AppDrawerProps> {
                             </ListItemIcon>
                             <ListItemText primary="Nouvelle ressource" />
                         </ListItem>
+
                         <ListItem button={true} onClick={this.openModal(ModalType.newCategory)}>
                             <ListItemIcon>
                                 <CreateNewFolderIcon />
                             </ListItemIcon>
                             <ListItemText primary="Nouvelle catégorie" />
                         </ListItem>
+
                         <ListItem button={true}>
                             <ListItemIcon>
                                 <RemoveCircleIcon />
@@ -50,7 +52,9 @@ class AppDrawer extends React.Component<AppDrawerProps> {
                             <ListItemText primary="Sources non fiables" />
                         </ListItem>
                     </List>
+
                     <Divider/>
+
                     <List>
                         <ListItem button={true}>
                             <ListItemIcon>
@@ -58,6 +62,7 @@ class AppDrawer extends React.Component<AppDrawerProps> {
                             </ListItemIcon>
                             <ListItemText primary="Compte"/>
                         </ListItem>
+                        
                         <ListItem button={true}>
                             <ListItemIcon>
                                 <SettingsPowerIcon />
@@ -71,10 +76,20 @@ class AppDrawer extends React.Component<AppDrawerProps> {
         );
     }
 
+    /**
+     * Open / Close Drawer
+     *
+     * @memberof AppDrawer
+     */
     toggle = () => () => {
         this.props.toggle();
     }
 
+    /**
+     * Open Modal
+     *
+     * @memberof AppDrawer
+     */
     openModal = (type: ModalType) => () => {
         this.props.onSelect(type);
     }
