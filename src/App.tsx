@@ -30,6 +30,7 @@ interface AppState {
   categories: Object;
   drawer: boolean;
   modal: ModalType;
+  selected: string;
 }
 
 class App extends React.Component<any, AppState> {
@@ -44,19 +45,22 @@ class App extends React.Component<any, AppState> {
     this.state = {
       categories: {},
       drawer: false,
-      modal: ModalType.none
+      modal: ModalType.none,
+      selected: ''
     }
     this.subscriptions = [];
 
+    // Set context 
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this.submitNewCategory = this.submitNewCategory.bind(this);
     this.submitNewRessource = this.submitNewRessource.bind(this);
     this.toggleDrawer = this.toggleDrawer.bind(this);
+    this.selectCategory = this.selectCategory.bind(this);
   }
 
   /**
-   *ComponentDidMount
+   *ComponentWillMount
    *
    * @memberof App
    */
@@ -93,7 +97,18 @@ class App extends React.Component<any, AppState> {
   }
 
   /**
-   *render
+   * componentWillUnmount
+   *
+   * @memberof App
+   */
+  public componentWillUnmount() {
+    this.subscriptions.forEach((subscription: Subscription) => {
+      subscription.unsubscribe()
+    })
+  }
+
+  /**
+   * Main render function
    *
    * @returns
    * @memberof App
@@ -109,15 +124,8 @@ class App extends React.Component<any, AppState> {
     return (
       <div className="App">
         <MuiThemeProvider theme={theme}>
-          <AppBar position="static">
-            <Toolbar>
-              <IconButton className="menuButton" color="inherit" aria-label="Menu" onClick={this.toggle()}>
-                <MenuIcon />
-              </IconButton>
-              <h6>Agrégat-Info</h6>
-              <Button color="inherit">Connexion</Button>
-            </Toolbar>
-          </AppBar>
+          
+          {this.renderAppBar()}
 
           <AppDrawer 
             open={this.state.drawer} 
@@ -128,13 +136,9 @@ class App extends React.Component<any, AppState> {
           <Grid container={true} spacing={8}>
             <Grid container={true} item={true} spacing={8} xs={2} className="v-grid">
               {this.renderCategories()}
-              <Grid item={true} xs={12}> 
-                <CategoryCard 
-                  category={null}
-                  onClick={this.openModal}
-                />
-              </Grid>
+              {this.renderDefaultCategoryCard()}
             </Grid>
+
             <Grid container={true} item={true} spacing={8} xs={10}>
               <Grid item={true} xs={12}>
                 <p>articles</p>
@@ -148,6 +152,27 @@ class App extends React.Component<any, AppState> {
     );
   }
 
+  private renderAppBar() {
+    return(
+      <AppBar position="static">
+        <Toolbar>
+          <IconButton className="menuButton" color="inherit" aria-label="Menu" onClick={this.toggle()}>
+            <MenuIcon />
+          </IconButton>
+          <h6>Agrégat-Info</h6>
+          <Button color="inherit">Connexion</Button>
+        </Toolbar>
+      </AppBar>
+    );
+  }
+
+  /**
+   * Render category cards
+   *
+   * @private
+   * @returns
+   * @memberof App
+   */
   private renderCategories() {
     if(Object.keys(this.state.categories).length > 0) {
       return (this.state.categories as any).map((category: any) => {
@@ -155,12 +180,33 @@ class App extends React.Component<any, AppState> {
           <GridListTile cols={1} key={category.id}> 
             <CategoryCard 
               category={category}
+              selected={this.state.selected === category.id}
               onClick={this.openModal}
+              onSelect={this.selectCategory}
             />
           </GridListTile>
         );
       });
     }
+  }
+
+  /**
+   * Render default category card
+   *
+   * @private
+   * @returns
+   * @memberof App
+   */
+  private renderDefaultCategoryCard() {
+    return (
+      <Grid item={true} xs={12}> 
+        <CategoryCard 
+          category={null}
+          selected={false}
+          onClick={this.openModal}
+        />
+      </Grid>
+    );
   }
 
   /**
@@ -210,6 +256,25 @@ class App extends React.Component<any, AppState> {
   closeModal() {
     console.log('close modal');
     this.setState({modal: ModalType.none});
+  }
+
+  /**
+   * Select a category
+   *
+   * @param {*} catId
+   * @returns
+   * @memberof App
+   */
+  selectCategory(catId: any) {
+    if(Object.keys(this.state.categories).length > 0) {
+      const catExist = (this.state.categories as any).filter((category: any) => {
+        return category.id === catId;
+      });
+
+      if(!catExist) { return; }
+
+      this.setState({ selected: catExist[0].id });
+    }
   }
 
   /**

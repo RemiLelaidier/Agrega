@@ -14,3 +14,7 @@
 .v-grid {
   overflow-y: scroll;
 }
+
+.selected {
+  border: 3px black solid;
+}

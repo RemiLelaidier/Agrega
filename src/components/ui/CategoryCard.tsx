@@ -8,25 +8,47 @@ import { ModalType } from 'src/App';
 
 export interface CategoryCardProps {
     category: any;
+    selected: boolean;
     onClick?: (any);
+    onSelect?: (any);
 }
 
 class CategoryCard extends React.Component<CategoryCardProps> {
 
+    /**
+     * Main render function
+     *
+     * @returns
+     * @memberof CategoryCard
+     */
     render() {
         return(
             this.renderCard()
         );
     }
 
+    /**
+     * Render button
+     *
+     * @private
+     * @returns
+     * @memberof CategoryCard
+     */
     private renderButton() {
         if(this.props.category) {
-            return <Button size="small">Accéder à la categorie</Button>;
+            return <Button onClick={this.onClick()} size="small">Accéder à la categorie</Button>;
         } else {
             return <Button onClick={this.onClick()}>Nouvelle catégorie</Button>
         }
     }
 
+    /**
+     * Render content function
+     *
+     * @private
+     * @returns
+     * @memberof CategoryCard
+     */
     private renderContent() {
         if(this.props.category) {
             return (
@@ -40,13 +62,23 @@ class CategoryCard extends React.Component<CategoryCardProps> {
         return;
     }
 
+    /**
+     * Render card function
+     *
+     * @private
+     * @returns
+     * @memberof CategoryCard
+     */
     private renderCard() {
         if(this.props.category) {
             const color: React.CSSProperties = {
                 backgroundColor: this.props.category.color
             }
+
+            const className = this.props.selected ? "card selected" : "card";
+
             return (
-                <Card className="card" style={color}>
+                <Card className={className} style={color}>
                     <CardContent>
                         {this.renderContent()}
                     </CardContent>
@@ -70,7 +102,12 @@ class CategoryCard extends React.Component<CategoryCardProps> {
     }
 
     onClick = () => () => {
-        this.props.onClick(ModalType.newCategory);
+        // If no category, then add a new category
+        if(!this.props.category) {
+            this.props.onClick(ModalType.newCategory);
+        }
+        // Else select current category
+        this.props.onSelect(this.props.category.id);
     }
 }
 
