@@ -7,13 +7,13 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import GridList from '@material-ui/core/GridList';
+import Grid from '@material-ui/core/Grid';
 import GridListTile from '@material-ui/core/GridListTile';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core';
 import { purple } from '@material-ui/core/colors';
 
 import Database from './database/Database';
-import CategotyCard from './components/ui/CategoryCard';
+import CategoryCard from './components/ui/CategoryCard';
 import NewCategoryModal from './components/ui/modals/NewCategoryModal';
 import AppDrawer from './components/ui/Drawer';
 import NewArticleModal from './components/ui/modals/NewArticleModal';
@@ -125,15 +125,22 @@ class App extends React.Component<any, AppState> {
             onSelect={this.openModal}
           />
 
-          <GridList cellHeight={160} cols={6}>
-            {this.renderCategories()}
-            <GridListTile cols={1}> 
-              <CategotyCard 
-                category={null}
-                onClick={this.openModal}
-              />
-            </GridListTile>
-          </GridList>
+          <Grid container={true} spacing={8}>
+            <Grid container={true} item={true} spacing={8} xs={2} className="v-grid">
+              {this.renderCategories()}
+              <Grid item={true} xs={12}> 
+                <CategoryCard 
+                  category={null}
+                  onClick={this.openModal}
+                />
+              </Grid>
+            </Grid>
+            <Grid container={true} item={true} spacing={8} xs={10}>
+              <Grid item={true} xs={12}>
+                <p>articles</p>
+              </Grid>
+            </Grid>
+          </Grid>
 
           {this.renderModal()}
         </MuiThemeProvider>
@@ -146,7 +153,7 @@ class App extends React.Component<any, AppState> {
       return (this.state.categories as any).map((category: any) => {
         return (
           <GridListTile cols={1} key={category.id}> 
-            <CategotyCard 
+            <CategoryCard 
               category={category}
               onClick={this.openModal}
             />

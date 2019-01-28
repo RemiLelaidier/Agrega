@@ -10,3 +10,7 @@
   margin-left: -12px;
   margin-right: 20px;
 }
+
+.v-grid {
+  overflow-y: scroll;
+}
