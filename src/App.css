@@ -19,6 +19,6 @@
   border: 3px black solid;
 }
 
-.category-card > * {
-  margin: 10px;
+.article {
+  height: 400px;
 }

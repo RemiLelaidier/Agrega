@@ -8,12 +8,10 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Grid from '@material-ui/core/Grid';
-import GridListTile from '@material-ui/core/GridListTile';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core';
 import { purple } from '@material-ui/core/colors';
 
 import Database from './database/Database';
-import CategoryCard from './components/ui/CategoryCard';
 import ArticleCard from './components/ui/ArticleCard';
 import NewCategoryModal from './components/ui/modals/NewCategoryModal';
 import NewArticleModal from './components/ui/modals/NewArticleModal';
@@ -130,17 +128,15 @@ class App extends React.Component<any, AppState> {
 
           <AppDrawer 
             open={this.state.drawer} 
-            toggle={this.toggleDrawer} 
+            toggle={this.toggleDrawer}
+            categories={this.state.categories}
+            selected={this.state.selected}
             onSelect={this.openModal}
+            onSelectCategory={this.selectCategory}
           />
 
-          <Grid container={true} spacing={8} className="categories-card">
-            <Grid container={true} item={true} spacing={8} xs={2} className="v-grid">
-              {this.renderCategories()}
-              {this.renderDefaultCategoryCard()}
-            </Grid>
-
-            <Grid container={true} item={true} spacing={8} xs={10} className="articles-card">
+          <Grid container={true} spacing={8}>
+            <Grid container={true} item={true} spacing={8} xs={12} className="categories-card">
               {this.renderArticles()}
             </Grid>
           </Grid>
@@ -165,63 +161,24 @@ class App extends React.Component<any, AppState> {
     );
   }
 
-  /**
-   * Render category cards
-   *
-   * @private
-   * @returns
-   * @memberof App
-   */
-  private renderCategories() {
-    if(Object.keys(this.state.categories).length > 0) {
-      return (this.state.categories as any).map((category: any) => {
-        return (
-          <GridListTile cols={1} key={category.id}> 
-            <CategoryCard 
-              category={category}
-              selected={this.state.selected === category.id}
-              onClick={this.openModal}
-              onSelect={this.selectCategory}
-            />
-          </GridListTile>
-        );
-      });
-    }
-  }
-
-  /**
-   * Render default category card
-   *
-   * @private
-   * @returns
-   * @memberof App
-   */
-  private renderDefaultCategoryCard() {
-    return (
-      <Grid item={true} xs={12}> 
-        <CategoryCard 
-          category={null}
-          selected={false}
-          onClick={this.openModal}
-        />
-      </Grid>
-    );
-  }
-
   private renderArticles() {
     if(Object.keys(this.state.categories).length > 0 && this.state.selected !== '') {
-      return (this.state.categories as any).map((category: any) => {
-        return (category.ressources).map((article: any) => {
-          return (
-            <Grid item={true} xs={12} key={category.id +'-' + article.id}>
-              <ArticleCard 
-                article={article}
-              />
-            </Grid>
-          );
-        })
+      // Get selected category
+      const category = (this.state.categories as any).find((cat: any) => {
+        return cat.id === this.state.selected;
       });
+
+      const categoriesToRender = (category.ressources).map((article: any) => {
+        return (
+          <Grid item={true} xs={4} key={category.id +'-' + article.name}>
+            <ArticleCard article={article}/>
+          </Grid>
+        );
+      });
+
+      return categoriesToRender;
     }
+    return;
   }
 
   /**

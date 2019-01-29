@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Card, CardContent } from '@material-ui/core';
 import MicrolinkCard from 'react-microlink';
 
+import './ArticleCard.css';
 export interface ArticleCardProps {
     article: any;
 }
@@ -17,7 +18,7 @@ class ArticleCard extends React.Component<ArticleCardProps> {
      */
     render() {
         return(
-            <Card>
+            <Card className="article-card">
                 <CardContent>
                     {this.renderContent()}
                 </CardContent>

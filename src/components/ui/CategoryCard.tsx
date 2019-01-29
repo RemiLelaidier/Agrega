@@ -39,7 +39,7 @@ class CategoryCard extends React.Component<CategoryCardProps> {
         if(this.props.category) {
             return <Button onClick={this.onClick()} size="small">Accéder à la categorie</Button>;
         } else {
-            return <Button onClick={this.onClick()}>Nouvelle catégorie</Button>
+            return <Button onClick={this.onClick()}>Ajouter</Button>
         }
     }
 
@@ -60,7 +60,13 @@ class CategoryCard extends React.Component<CategoryCardProps> {
                 </div>
             );
         }
-        return;
+        
+        // default content
+        return(
+            <div className="category-card">
+                <h3>Nouvelle catégorie</h3>
+            </div>
+        );
     }
 
     /**

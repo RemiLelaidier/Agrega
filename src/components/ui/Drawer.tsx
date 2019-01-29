@@ -12,11 +12,15 @@ import SettingsPowerIcon from '@material-ui/icons/SettingsPower';
 import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 import Drawer from '@material-ui/core/Drawer';
 import { ModalType } from 'src/App';
+import CategoryCard from './CategoryCard';
 
 interface AppDrawerProps {
     open: boolean;
     toggle: (any);
-    onSelect?: (any);
+    categories: any;
+    selected: string;
+    onSelect: (any);
+    onSelectCategory: (any);
 }
 
 class AppDrawer extends React.Component<AppDrawerProps> {
@@ -70,6 +74,13 @@ class AppDrawer extends React.Component<AppDrawerProps> {
                             <ListItemText primary="Déconnexion"/>
                         </ListItem>
                     </List>
+
+                    <Divider/>
+
+                    <List>
+                        {this.renderDefaultCategoryCard()}
+                        {this.renderCategories()}
+                    </List>
                 </div>
             </Drawer>
             </>
@@ -93,6 +104,53 @@ class AppDrawer extends React.Component<AppDrawerProps> {
     openModal = (type: ModalType) => () => {
         this.props.onSelect(type);
     }
+
+    selectCategory = (catId: string) => () => {
+        this.props.onSelectCategory(catId)
+    }
+
+    /**
+   * Render category cards
+   *
+   * @private
+   * @returns
+   * @memberof AppDrawer
+   */
+  private renderCategories() {
+    if(Object.keys(this.props.categories).length > 0) {
+      return (this.props.categories as any).map((category: any) => {
+        return (
+          <ListItem key={category.id}> 
+            <CategoryCard 
+              category={category}
+              selected={this.props.selected === category.id}
+              onClick={this.openModal}
+              onSelect={this.selectCategory(category.id)}
+            />
+          </ListItem>
+        );
+      });
+    }
+  }
+
+  /**
+   * Render default category card
+   *
+   * @private
+   * @returns
+   * @memberof AppDrawer
+   */
+  private renderDefaultCategoryCard() {
+    return (
+      <ListItem> 
+        <CategoryCard 
+          category={null}
+          selected={false}
+          onClick={this.openModal}
+        />
+      </ListItem>
+    );
+  }
 }
 
 export default AppDrawer;
