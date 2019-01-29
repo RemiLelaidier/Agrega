@@ -14,9 +14,10 @@ import { purple } from '@material-ui/core/colors';
 
 import Database from './database/Database';
 import CategoryCard from './components/ui/CategoryCard';
+import ArticleCard from './components/ui/ArticleCard';
 import NewCategoryModal from './components/ui/modals/NewCategoryModal';
-import AppDrawer from './components/ui/Drawer';
 import NewArticleModal from './components/ui/modals/NewArticleModal';
+import AppDrawer from './components/ui/Drawer';
 
 import './App.css';
 
@@ -133,16 +134,14 @@ class App extends React.Component<any, AppState> {
             onSelect={this.openModal}
           />
 
-          <Grid container={true} spacing={8}>
+          <Grid container={true} spacing={8} className="categories-card">
             <Grid container={true} item={true} spacing={8} xs={2} className="v-grid">
               {this.renderCategories()}
               {this.renderDefaultCategoryCard()}
             </Grid>
 
-            <Grid container={true} item={true} spacing={8} xs={10}>
-              <Grid item={true} xs={12}>
-                <p>articles</p>
-              </Grid>
+            <Grid container={true} item={true} spacing={8} xs={10} className="articles-card">
+              {this.renderArticles()}
             </Grid>
           </Grid>
 
@@ -207,6 +206,22 @@ class App extends React.Component<any, AppState> {
         />
       </Grid>
     );
+  }
+
+  private renderArticles() {
+    if(Object.keys(this.state.categories).length > 0 && this.state.selected !== '') {
+      return (this.state.categories as any).map((category: any) => {
+        return (category.ressources).map((article: any) => {
+          return (
+            <Grid item={true} xs={12} key={category.id +'-' + article.id}>
+              <ArticleCard 
+                article={article}
+              />
+            </Grid>
+          );
+        })
+      });
+    }
   }
 
   /**

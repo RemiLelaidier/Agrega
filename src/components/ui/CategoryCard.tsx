@@ -6,6 +6,7 @@ import CardActions from '@material-ui/core/CardActions';
 import Button from '@material-ui/core/Button';
 import { ModalType } from 'src/App';
 
+import './CategoryCard.css';
 export interface CategoryCardProps {
     category: any;
     selected: boolean;
@@ -52,7 +53,7 @@ class CategoryCard extends React.Component<CategoryCardProps> {
     private renderContent() {
         if(this.props.category) {
             return (
-                <div>
+                <div className="category-card">
                     <h3>{this.props.category.name}</h3>
                     <h4>{this.props.category.description}</h4>
                     <p>{this.props.category.ressources.length} articles</p>
@@ -90,13 +91,13 @@ class CategoryCard extends React.Component<CategoryCardProps> {
         } else {
             return (
                 <Card className="card">
-                <CardContent>
-                    {this.renderContent()}
-                </CardContent>
-                <CardActions>
-                    {this.renderButton()}
-                </CardActions>
-            </Card>
+                    <CardContent>
+                        {this.renderContent()}
+                    </CardContent>
+                    <CardActions>
+                        {this.renderButton()}
+                    </CardActions>
+                </Card>
             );
         }
     }
@@ -104,10 +105,10 @@ class CategoryCard extends React.Component<CategoryCardProps> {
     onClick = () => () => {
         // If no category, then add a new category
         if(!this.props.category) {
-            this.props.onClick(ModalType.newCategory);
+            return this.props.onClick(ModalType.newCategory);
         }
         // Else select current category
-        this.props.onSelect(this.props.category.id);
+        return this.props.onSelect(this.props.category.id);
     }
 }
 
