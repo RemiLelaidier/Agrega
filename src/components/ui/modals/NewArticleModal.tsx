@@ -62,8 +62,8 @@ class NewArticleModal extends React.Component<NewArticleModalProps, NewArticleMo
         const categories$ = observeSubject(this.categoriesField$, (values: Array<string>) => values.length > 0);
 
         this.canSubmit$ = combineLatest(name$, desc$, url$, categories$)
-        .subscribe(([nameValue, descValue, colorValue]) => {
-            if(nameValue && descValue && colorValue) {
+        .subscribe(([nameValue, descValue, colorValue, categoriesValue]) => {
+            if(nameValue && descValue && colorValue && categoriesValue) {
                 this.setState({canSubmit: true});
             } else {
                 this.setState({canSubmit: false});
