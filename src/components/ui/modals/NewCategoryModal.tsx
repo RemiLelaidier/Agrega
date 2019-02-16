@@ -23,9 +23,11 @@ interface NewCategoryModalState {
 }
 
 class NewCategoryModal extends React.Component<ModalProps, NewCategoryModalState> {
+
     private canSubmit$: Subscription;
     private nameField$: BehaviorSubject<string>;
     private descField$: BehaviorSubject<string>;
+    private colorField$: BehaviorSubject<string>;
 
     constructor(props: ModalProps) {
         super(props);
@@ -38,17 +40,26 @@ class NewCategoryModal extends React.Component<ModalProps, NewCategoryModalState
             canSubmit: false
         }
 
+        // Create subject observable
         this.nameField$ = new BehaviorSubject(this.state.name);
         this.descField$ = new BehaviorSubject(this.state.description);
+        this.colorField$ = new BehaviorSubject(this.state.color);
     }
 
+    /**
+     * On componentDidMount set observables
+     *
+     * @memberof NewCategoryModal
+     */
     componentDidMount() {
         const name$ = observeSubject(this.nameField$, (value: string) => value !== '');
         const desc$ = observeSubject(this.descField$, (value: string) => value !== '');
+        const color$ = observeSubject(this.colorField$, (value: string) => value !== '');
 
-        this.canSubmit$ = combineLatest(name$, desc$)
-        .subscribe(([nameValue, descValue]) => {
-            if(nameValue && descValue) {
+        // Combine observables with their latest value
+        this.canSubmit$ = combineLatest(name$, desc$, color$)
+        .subscribe(([nameValue, descValue, colorValue]) => {
+            if(nameValue && descValue && colorValue) {
                 this.setState({canSubmit: true});
             } else {
                 this.setState({canSubmit: false});
@@ -56,6 +67,11 @@ class NewCategoryModal extends React.Component<ModalProps, NewCategoryModalState
         });
     }
 
+    /**
+     * On unMount, remove subscription
+     *
+     * @memberof NewCategoryModal
+     */
     componentWillUnmount() {
         this.canSubmit$.unsubscribe();
     }
@@ -126,10 +142,11 @@ class NewCategoryModal extends React.Component<ModalProps, NewCategoryModalState
         this.setState({
             color: color.hex
         })
+
+        this.colorField$.next(color.hex);
     }
 
     handleSubmit = () => () => {
-        console.log('submit');
         this.props.onSubmit({
             name: this.state.name,
             description: this.state.description,
