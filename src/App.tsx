@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { RxDatabase } from 'rxdb';
-import { Subscription } from 'rxjs';
+import { Subscription, BehaviorSubject, Observable } from 'rxjs';
 
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -18,6 +18,7 @@ import NewArticleModal from './components/ui/modals/NewArticleModal';
 import AppDrawer from './components/ui/Drawer';
 
 import './App.css';
+import Login from './components/ui/Login';
 
 export enum ModalType {
   none = 'none',
@@ -25,7 +26,13 @@ export enum ModalType {
   newArticle = 'newArticle'
 }
 
+export interface User {
+  id: string;
+  username: string;
+}
+
 interface AppState {
+  connected: User | null;
   categories: Object;
   drawer: boolean;
   modal: ModalType;
@@ -39,14 +46,21 @@ class App extends React.Component<any, AppState> {
   private syncUrl: string = "http://localhost:5984/";
   private dbName: string = "agrega";
 
+  private connected$: BehaviorSubject<User | null>;
+
   constructor(props: any) {
     super(props);
+
     this.state = {
+      connected: null,
       categories: {},
       drawer: false,
       modal: ModalType.none,
       selected: ''
     }
+
+    this.connected$ = new BehaviorSubject(this.state.connected);
+    this.connected$.subscribe();
     this.subscriptions = [];
 
     // Set context 
@@ -59,20 +73,17 @@ class App extends React.Component<any, AppState> {
   }
 
   /**
-   *ComponentWillMount
+   *ComponentDidMount
    *
    * @memberof App
    */
-  public async componentWillMount() {
+  public async componentDidMount() {
     this.db = await Database.create(this.dbName);
 
-    const sub: Subscription = this.db.categories.find().sort({id: 1}).$.subscribe(categories => {
-      if(!categories) {
-        return;
-      }
-      this.setState({categories})
+    const categories$: Observable<any[]> = this.db.categories.find().sort({id: 1}).$;
+    const sub = categories$.subscribe(categories => {
+      this.setState({categories});
     });
-
     this.subscriptions.push(sub);
 
     // ReplicationState
@@ -80,15 +91,6 @@ class App extends React.Component<any, AppState> {
 
     this.subscriptions.push(
       replicationState.change$.subscribe(change => console.dir(`change - ${change}`))
-    );
-    this.subscriptions.push(
-      replicationState.docs$.subscribe(docData => console.dir(`docs - ${docData}`))
-    );
-    this.subscriptions.push(
-      replicationState.active$.subscribe(active => console.dir(`active - ${active}`))
-    );
-    this.subscriptions.push(
-      replicationState.complete$.subscribe(completed => console.dir(`completed - ${completed}`))
     );
     this.subscriptions.push(
       replicationState.error$.subscribe(error => console.dir(`error - ${error}`))
@@ -126,14 +128,7 @@ class App extends React.Component<any, AppState> {
           
           {this.renderAppBar()}
 
-          <AppDrawer 
-            open={this.state.drawer} 
-            toggle={this.toggleDrawer}
-            categories={this.state.categories}
-            selected={this.state.selected}
-            onSelect={this.openModal}
-            onSelectCategory={this.selectCategory}
-          />
+          {this.renderDrawer()}
 
           <Grid container={true} spacing={8}>
             <Grid container={true} item={true} spacing={8} xs={12} className="categories-card">
@@ -162,6 +157,9 @@ class App extends React.Component<any, AppState> {
   }
 
   private renderArticles() {
+    if(!this.state.connected) {
+      return <Login/>
+    }
     if(Object.keys(this.state.categories).length > 0 && this.state.selected !== '') {
       // Get selected category
       const category = (this.state.categories as any).find((cat: any) => {
@@ -197,6 +195,22 @@ class App extends React.Component<any, AppState> {
       default:
         return;
     }
+  }
+
+  private renderDrawer() {
+    if(this.state.connected) {
+      return(
+        <AppDrawer 
+          open={this.state.drawer} 
+          toggle={this.toggleDrawer}
+          categories={this.state.categories}
+          selected={this.state.selected}
+          onSelect={this.openModal}
+          onSelectCategory={this.selectCategory}
+        />
+      )
+    }
+    return;
   }
 
   private toggleDrawer() {
