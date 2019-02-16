@@ -11,13 +11,13 @@ import { map } from 'rxjs/operators';
  * @param {(value: any) => boolean} validation
  * @returns {Observable<string>}
  */
-export function observeSubject(subject: BehaviorSubject<string>, validation: (value: any) => boolean): Observable<string | null> {
+export function observeSubject(subject: BehaviorSubject<string | Array<string>>, validation: (value: any) => boolean): Observable<boolean> {
     return subject.pipe(
-        map((value:string) => {
+        map((value: string | Array<string>) => {
             if(!validation(value)) {
-                return null;
+                return false;
             }
-            return value;
+            return true;
         })
     )
 }

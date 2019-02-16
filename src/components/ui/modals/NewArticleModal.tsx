@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+import { Subscription, BehaviorSubject, combineLatest } from 'rxjs';
+
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -15,6 +17,7 @@ import { ModalProps } from './type';
 import { FormControl, InputLabel, Select, MenuItem, Checkbox, ListItemText, Input } from '@material-ui/core';
 
 import './Modal.css';
+import { observeSubject } from 'src/utils/RxFactory';
 
 interface NewArticleModalProps extends ModalProps {
     categories: Object;
@@ -25,9 +28,16 @@ interface NewArticleModalState {
     description: string;
     url: string;
     categories: string[];
+    canSubmit: boolean;
 }
 
 class NewArticleModal extends React.Component<NewArticleModalProps, NewArticleModalState> {
+
+    private canSubmit$: Subscription;
+    private nameField$: BehaviorSubject<string>;
+    private descField$: BehaviorSubject<string>;
+    private categoriesField$: BehaviorSubject<Array<string>>;
+    private urlField$: BehaviorSubject<string>;
 
     constructor(props: NewArticleModalProps) {
         super(props);
@@ -35,8 +45,39 @@ class NewArticleModal extends React.Component<NewArticleModalProps, NewArticleMo
             name: '',
             description: '',
             url: '',
-            categories: []
+            categories: [],
+            canSubmit: false
         };
+
+        this.nameField$ = new BehaviorSubject(this.state.name);
+        this.descField$ = new BehaviorSubject(this.state.description);
+        this.categoriesField$ = new BehaviorSubject(this.state.categories);
+        this.urlField$ = new BehaviorSubject(this.state.url);
+    }
+
+    componentDidMount() {
+        const name$ = observeSubject(this.nameField$, (value: string) => value !== '');
+        const desc$ = observeSubject(this.descField$, (value: string) => value !== '');
+        const url$ = observeSubject(this.urlField$, (value: string) => value !== '');
+        const categories$ = observeSubject(this.categoriesField$, (values: Array<string>) => values.length > 0);
+
+        this.canSubmit$ = combineLatest(name$, desc$, url$, categories$)
+        .subscribe(([nameValue, descValue, colorValue]) => {
+            if(nameValue && descValue && colorValue) {
+                this.setState({canSubmit: true});
+            } else {
+                this.setState({canSubmit: false});
+            }
+        });
+    }
+
+    /**
+     * on Unmount remove subscription
+     *
+     * @memberof NewArticleModal
+     */
+    componentWillUnmount() {
+        this.canSubmit$.unsubscribe();
     }
 
     render() {
@@ -102,7 +143,7 @@ class NewArticleModal extends React.Component<NewArticleModalProps, NewArticleMo
                     <Button onClick={this.handleClose()} color="primary">
                         Annuler
                     </Button>
-                    <Button onClick={this.handleSubmit()} color="primary">
+                    <Button onClick={this.handleSubmit()} color="primary" disabled={!this.state.canSubmit}>
                         Ok
                     </Button>
                 </DialogActions>
@@ -119,15 +160,23 @@ class NewArticleModal extends React.Component<NewArticleModalProps, NewArticleMo
     }
 
     handleChange = (name: string) => (event: any) => {
+        const value = event.target.value;
         this.setState({
-          [name]: event.target ? (event.target as any).value : '',
+          [name]: value,
         } as any);
+
+        if(name === 'name') this.nameField$.next(value);
+        if(name === 'description') this.descField$.next(value);
+        if(name === 'url') this.urlField$.next(value);
     }
 
     handleCategoryChange = () => (event: any) => {
+        const value = event.target.value
         this.setState({
-            categories: event.target.value
+            categories: value
         });
+
+        this.categoriesField$.next(value);
     }
 
     renderList() {
