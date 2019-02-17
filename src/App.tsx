@@ -4,7 +4,6 @@ import { Subscription, BehaviorSubject, Observable } from 'rxjs';
 
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Grid from '@material-ui/core/Grid';
@@ -19,6 +18,7 @@ import AppDrawer from './components/ui/Drawer';
 
 import './App.css';
 import Login from './components/ui/Login';
+import fire from './auth/Fire';
 
 export enum ModalType {
   none = 'none',
@@ -78,6 +78,9 @@ class App extends React.Component<any, AppState> {
    * @memberof App
    */
   public async componentDidMount() {
+    // Register firebase listener
+    this.authListener();
+
     this.db = await Database.create(this.dbName);
 
     const categories$: Observable<any[]> = this.db.categories.find().sort({id: 1}).$;
@@ -146,11 +149,10 @@ class App extends React.Component<any, AppState> {
     return(
       <AppBar position="static">
         <Toolbar>
-          <IconButton className="menuButton" color="inherit" aria-label="Menu" onClick={this.toggle()}>
+          <IconButton className="menuButton" color="inherit" aria-label="Menu" onClick={this.toggle()} disabled={this.state.connected === null}>
             <MenuIcon />
           </IconButton>
           <h6>Agrégat-Info</h6>
-          <Button color="inherit">Connexion</Button>
         </Toolbar>
       </AppBar>
     );
@@ -301,6 +303,19 @@ class App extends React.Component<any, AppState> {
         }]
       }
       await this.db.categories.atomicUpsert(collection);
+    });
+  }
+
+  authListener() {
+    fire.auth().onAuthStateChanged((user: firebase.User) => {
+      if (user) {
+        this.setState({ connected: {
+            id: user.uid,
+            username: user.displayName ? user.displayName : 'Anonymous'
+        } });
+      } else {
+        this.setState({ connected: null });
+      }
     });
   }
 }

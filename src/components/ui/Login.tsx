@@ -8,10 +8,7 @@ import Button from '@material-ui/core/Button';
 import { observeSubject } from 'src/utils/RxFactory';
 
 import './Login.css';
-
-export interface LoginProps {
-    onConnected?: (any);
-}
+import fire from 'src/auth/Fire';
 
 interface LoginState {
     name: string;
@@ -19,14 +16,14 @@ interface LoginState {
     canSubmit: boolean;
 }
 
-class Login extends React.Component<LoginProps, LoginState> {
+class Login extends React.Component<any, LoginState> {
 
     private canSubmit$: Subscription;
     private request$: BehaviorSubject<any>;
     private nameField$: BehaviorSubject<string>;
     private passwordField$: BehaviorSubject<string>;
 
-    constructor(props: LoginProps) {
+    constructor(props: any) {
         super(props);
 
         this.state = { 
@@ -38,12 +35,13 @@ class Login extends React.Component<LoginProps, LoginState> {
         this.nameField$ = new BehaviorSubject(this.state.name);
         this.passwordField$ = new BehaviorSubject(this.state.password);
         this. request$ = new BehaviorSubject(null);
+
+        this.requestConnect = this.requestConnect.bind(this);
     }
 
     componentDidMount() {
         const name$ = observeSubject(this.nameField$, (value: string) => value !== '');
         const password$ = observeSubject(this.passwordField$, (value: string) => value !== '');
-
 
         this.canSubmit$ = combineLatest(name$, password$, this.request$)
         .subscribe(([name, password, request]) => {
@@ -62,12 +60,13 @@ class Login extends React.Component<LoginProps, LoginState> {
 
     render() {
         return(
-            <div>
+            <div className="form-container">
                 <TextField
                     id="standard-username-input"
-                    label="Nom d'utilisateur"
+                    label="Email"
                     className="input"
                     type="text"
+                    value={this.state.name}
                     onChange={this.handleChange('name')}
                     margin="normal"
                 />
@@ -79,7 +78,7 @@ class Login extends React.Component<LoginProps, LoginState> {
                     onChange={this.handleChange('password')}
                     margin="normal"
                 />
-                <Button onClick={this.requestConnect()} color="primary" disabled={!this.state.canSubmit}>
+                <Button onClick={this.requestConnect} color="primary" disabled={!this.state.canSubmit}>
                     Ok
                 </Button>
             </div>
@@ -96,8 +95,16 @@ class Login extends React.Component<LoginProps, LoginState> {
         if(name === 'password') this.passwordField$.next(value);
     }
 
-    requestConnect = () => () => {
+    async requestConnect(e) {
+        e.preventDefault();
         this.request$.next(true);
+        return fire.auth().signInWithEmailAndPassword(this.state.name, this.state.password)
+            .then(() => {
+                this.request$.next(false);
+            })
+            .catch(() => {
+                this.request$.next(false);
+            });
     }
 }
 

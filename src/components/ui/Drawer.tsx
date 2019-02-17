@@ -13,6 +13,7 @@ import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 import Drawer from '@material-ui/core/Drawer';
 import { ModalType } from 'src/App';
 import CategoryCard from './CategoryCard';
+import fire from 'src/auth/Fire';
 
 interface AppDrawerProps {
     open: boolean;
@@ -24,6 +25,13 @@ interface AppDrawerProps {
 }
 
 class AppDrawer extends React.Component<AppDrawerProps> {
+
+    constructor(props: any) {
+        super(props);
+
+        this.logout = this.logout.bind(this);
+    }
+
     render() {
         return (
             <>
@@ -67,7 +75,7 @@ class AppDrawer extends React.Component<AppDrawerProps> {
                             <ListItemText primary="Compte"/>
                         </ListItem>
                         
-                        <ListItem button={true}>
+                        <ListItem button={true} onClick={this.logout}>
                             <ListItemIcon>
                                 <SettingsPowerIcon />
                             </ListItemIcon>
@@ -151,6 +159,10 @@ class AppDrawer extends React.Component<AppDrawerProps> {
       </ListItem>
     );
   }
+
+  logout(e) {
+      fire.auth().signOut();
+  } 
 }
 
 export default AppDrawer;
