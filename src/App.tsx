@@ -11,13 +11,13 @@ import { MuiThemeProvider, createMuiTheme } from '@material-ui/core';
 import { purple } from '@material-ui/core/colors';
 
 import Database from './database/Database';
-import ArticleCard from './components/ui/ArticleCard';
+import ArticleCard from './components/ui/ArticleCard/ArticleCard';
+import Login from './components/ui/Login/Login';
 import NewCategoryModal from './components/ui/modals/NewCategoryModal';
 import NewArticleModal from './components/ui/modals/NewArticleModal';
 import AppDrawer from './components/ui/Drawer';
 
 import './App.css';
-import Login from './components/ui/Login';
 import fire from './auth/Fire';
 
 export enum ModalType {
@@ -299,7 +299,7 @@ class App extends React.Component<any, AppState> {
           name: data.name,
           description: data.description,
           url: data.url,
-          added: 'user'
+          added: this.state.connected ? this.state.connected.username : 'Anonymous'
         }]
       }
       await this.db.categories.atomicUpsert(collection);

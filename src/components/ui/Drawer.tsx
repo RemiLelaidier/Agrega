@@ -12,7 +12,7 @@ import SettingsPowerIcon from '@material-ui/icons/SettingsPower';
 import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 import Drawer from '@material-ui/core/Drawer';
 import { ModalType } from 'src/App';
-import CategoryCard from './CategoryCard';
+import CategoryCard from './CategoryCard/CategoryCard';
 import fire from 'src/auth/Fire';
 
 interface AppDrawerProps {
