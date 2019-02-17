@@ -34,7 +34,7 @@ class Login extends React.Component<any, LoginState> {
 
         this.nameField$ = new BehaviorSubject(this.state.name);
         this.passwordField$ = new BehaviorSubject(this.state.password);
-        this. request$ = new BehaviorSubject(null);
+        this.request$ = new BehaviorSubject(false);
 
         this.requestConnect = this.requestConnect.bind(this);
     }
@@ -46,7 +46,7 @@ class Login extends React.Component<any, LoginState> {
         this.canSubmit$ = combineLatest(name$, password$, this.request$)
         .subscribe(([name, password, request]) => {
             const validInput: boolean = name && password;
-            if(validInput || !request) {
+            if(validInput && !request) {
                 this.setState({canSubmit: true});
             } else {
                 this.setState({canSubmit: false});
