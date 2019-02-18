@@ -13,13 +13,14 @@ import fire from 'src/auth/Fire';
 interface LoginState {
     name: string;
     password: string;
+    error: string;
     canSubmit: boolean;
 }
 
 class Login extends React.Component<any, LoginState> {
 
     private canSubmit$: Subscription;
-    private request$: BehaviorSubject<any>;
+    private request$: BehaviorSubject<boolean>;
     private nameField$: BehaviorSubject<string>;
     private passwordField$: BehaviorSubject<string>;
 
@@ -29,6 +30,7 @@ class Login extends React.Component<any, LoginState> {
         this.state = { 
             name: '',
             password: '',
+            error: '',
             canSubmit: false
         };
 
@@ -61,26 +63,34 @@ class Login extends React.Component<any, LoginState> {
     render() {
         return(
             <div className="form-container">
-                <TextField
-                    id="standard-username-input"
-                    label="Email"
-                    className="input"
-                    type="text"
-                    value={this.state.name}
-                    onChange={this.handleChange('name')}
-                    margin="normal"
-                />
-                <TextField
-                    id="standard-password-input"
-                    label="Mot de passe"
-                    className="input"
-                    type="password"
-                    onChange={this.handleChange('password')}
-                    margin="normal"
-                />
-                <Button onClick={this.requestConnect} color="primary" disabled={!this.state.canSubmit}>
-                    Ok
-                </Button>
+                <div className="form-header">
+                    <h1>Connexion</h1>
+                </div>
+                <div className="form-content">
+                    <TextField
+                        id="standard-username-input"
+                        label="Email"
+                        className="input"
+                        type="text"
+                        value={this.state.name}
+                        onChange={this.handleChange('name')}
+                        margin="normal"
+                    />
+                    <TextField
+                        id="standard-password-input"
+                        label="Mot de passe"
+                        className="input"
+                        type="password"
+                        onChange={this.handleChange('password')}
+                        margin="normal"
+                    />
+                </div>
+                <div className="form-actions">
+                    <Button onClick={this.requestConnect} color="primary" disabled={!this.state.canSubmit}>
+                        Ok
+                    </Button>
+                </div>
+                {this.state.error ? (<div className='form-error'>{this.state.error}</div>) : ''}
             </div>
         )
     }
@@ -101,9 +111,11 @@ class Login extends React.Component<any, LoginState> {
         return fire.auth().signInWithEmailAndPassword(this.state.name, this.state.password)
             .then(() => {
                 this.request$.next(false);
+                this.setState({error: ''});
             })
-            .catch(() => {
+            .catch((error: any) => {
                 this.request$.next(false);
+                this.setState({error: error.message});
             });
     }
 }

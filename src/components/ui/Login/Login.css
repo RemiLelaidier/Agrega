@@ -9,8 +9,49 @@
     width: 300px;
     margin: auto;
     background-color: #FFF;
-    border-radius: 10px;
-    padding: 20px;
+    border-radius: 3px;
     box-shadow: 10px 5px 5px #443f3f;
     margin-top: 70px;
+}
+
+.form-header {
+    background-color: #4527a0;
+    border-radius: 3px 3px 0 0;
+    color: #fff;
+    padding: 0 20px;
+    box-sizing: border-box;
+    width: 100%;
+    box-shadow: 1px 2px 6px grey;
+}
+
+.form-content {
+    padding: 0 20px;
+    margin-bottom: 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.form-content > * {
+    width: 100%
+}
+
+.form-actions {
+    float: right;
+    color: #4527a0;
+    width: 100%;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
+.form-actions button {
+    float: right;
+    margin-right: 10px;
+    box-sizing: border-box;
+}
+
+.form-error {
+    color: red;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 20px 30px;
 }
