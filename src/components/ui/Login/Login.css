@@ -35,6 +35,10 @@
     width: 100%
 }
 
+.form-content > .input > div {
+    margin-top: 0;
+}
+
 .form-actions {
     float: right;
     color: #4527a0;
