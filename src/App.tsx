@@ -119,8 +119,8 @@ class App extends React.Component<any, AppState> {
   public render() {
     const theme = createMuiTheme({
       palette: {
-        primary: { main: '#4527a0' }, // Purple and green play nicely together.
-        secondary: { main: '#11cb5f' }, // This is just green.A700 as hex.
+        primary: { main: '#4527a0' }, 
+        secondary: { main: '#11cb5f' },
       },
     });
 
@@ -206,6 +206,7 @@ class App extends React.Component<any, AppState> {
           toggle={this.toggleDrawer}
           categories={this.state.categories}
           selected={this.state.selected}
+          name={this.state.connected.username}
           onSelect={this.openModal}
           onSelectCategory={this.selectCategory}
         />
@@ -305,12 +306,17 @@ class App extends React.Component<any, AppState> {
     });
   }
 
+  /**
+   * Listener for firebase auth
+   *
+   * @memberof App
+   */
   authListener() {
     fire.auth().onAuthStateChanged((user: firebase.User) => {
       if (user) {
         this.setState({ connected: {
             id: user.uid,
-            username: user.displayName ? user.displayName : 'Anonymous'
+            username: user.email ? user.email : 'Anonymous'
         } });
       } else {
         this.setState({ connected: null });

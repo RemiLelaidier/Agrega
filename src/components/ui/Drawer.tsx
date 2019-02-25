@@ -20,6 +20,7 @@ interface AppDrawerProps {
     toggle: (any);
     categories: any;
     selected: string;
+    name: string;
     onSelect: (any);
     onSelectCategory: (any);
 }
@@ -43,6 +44,24 @@ class AppDrawer extends React.Component<AppDrawerProps> {
                     onKeyDown={this.toggle()}
                 >
                     <List>
+                        <ListItem color="primary">
+                            <ListItemIcon>
+                                <AccountCircleIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Connecté sous" secondary={this.props.name} />
+                        </ListItem>
+                        
+                        <ListItem button={true} onClick={this.logout}>
+                            <ListItemIcon>
+                                <SettingsPowerIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Déconnexion"/>
+                        </ListItem>
+                    </List>
+
+                    <Divider />
+
+                    <List>
                         <ListItem button={true} onClick={this.openModal(ModalType.newArticle)}>
                             <ListItemIcon>
                                 <NoteAddIcon />
@@ -62,24 +81,6 @@ class AppDrawer extends React.Component<AppDrawerProps> {
                                 <RemoveCircleIcon />
                             </ListItemIcon>
                             <ListItemText primary="Sources non fiables" />
-                        </ListItem>
-                    </List>
-
-                    <Divider/>
-
-                    <List>
-                        <ListItem button={true}>
-                            <ListItemIcon>
-                                <AccountCircleIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Compte"/>
-                        </ListItem>
-                        
-                        <ListItem button={true} onClick={this.logout}>
-                            <ListItemIcon>
-                                <SettingsPowerIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Déconnexion"/>
                         </ListItem>
                     </List>
 
