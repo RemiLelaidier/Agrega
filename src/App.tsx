@@ -132,7 +132,7 @@ class App extends React.Component<any, AppState> {
 
           {this.renderDrawer()}
 
-          <Grid container={true} spacing={8}>
+          <Grid container={true} spacing={8} className='ressources-container'>
             <Grid container={true} item={true} spacing={8} xs={12} className="categories-card">
               {this.renderArticles()}
             </Grid>
