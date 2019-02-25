@@ -14,16 +14,27 @@ interface LoginState {
     name: string;
     password: string;
     error: string;
+    creation: boolean;
     canSubmit: boolean;
 }
 
 class Login extends React.Component<any, LoginState> {
 
+    /* User can submit form */
     private canSubmit$: Subscription;
+
+    /* Request in progress */
     private request$: BehaviorSubject<boolean>;
+
+    /* observe fields values */
     private nameField$: BehaviorSubject<string>;
     private passwordField$: BehaviorSubject<string>;
 
+    /**
+     * Creates an instance of Login.
+     * @param {*} props
+     * @memberof Login
+     */
     constructor(props: any) {
         super(props);
 
@@ -31,6 +42,7 @@ class Login extends React.Component<any, LoginState> {
             name: '',
             password: '',
             error: '',
+            creation: false,
             canSubmit: false
         };
 
@@ -38,13 +50,15 @@ class Login extends React.Component<any, LoginState> {
         this.passwordField$ = new BehaviorSubject(this.state.password);
         this.request$ = new BehaviorSubject(false);
 
-        this.requestConnect = this.requestConnect.bind(this);
+        this.request = this.request.bind(this);
     }
 
     componentDidMount() {
+        // Observe and validate datas in fields
         const name$ = observeSubject(this.nameField$, (value: string) => value !== '');
         const password$ = observeSubject(this.passwordField$, (value: string) => value !== '');
 
+        // Combine
         this.canSubmit$ = combineLatest(name$, password$, this.request$)
         .subscribe(([name, password, request]) => {
             const validInput: boolean = name && password;
@@ -64,7 +78,7 @@ class Login extends React.Component<any, LoginState> {
         return(
             <div className="form-container">
                 <div className="form-header">
-                    <h1>Connexion</h1>
+                    {this.renderAltTitle()}
                 </div>
                 <div className="form-content">
                     <TextField
@@ -86,7 +100,8 @@ class Login extends React.Component<any, LoginState> {
                     />
                 </div>
                 <div className="form-actions">
-                    <Button onClick={this.requestConnect} color="primary" disabled={!this.state.canSubmit}>
+                    {this.renderAltAction()}
+                    <Button onClick={this.request} color="primary" disabled={!this.state.canSubmit}>
                         Ok
                     </Button>
                 </div>
@@ -105,10 +120,14 @@ class Login extends React.Component<any, LoginState> {
         if(name === 'password') this.passwordField$.next(value);
     }
 
-    async requestConnect(e) {
+    //
+    async request(e) {
         e.preventDefault();
         this.request$.next(true);
-        return fire.auth().signInWithEmailAndPassword(this.state.name, this.state.password)
+        // Determine firebase method to call (signin or login)
+        const signInOrLogin = this.state.creation ? 'createUserWithEmailAndPassword' : 'signInWithEmailAndPassword';
+        // Call firebase
+        return fire.auth()[signInOrLogin](this.state.name, this.state.password)
             .then(() => {
                 this.request$.next(false);
                 this.setState({error: ''});
@@ -117,6 +136,36 @@ class Login extends React.Component<any, LoginState> {
                 this.request$.next(false);
                 this.setState({error: error.message});
             });
+    }
+
+    renderAltAction() {
+        if(!this.state.creation) {
+            return (
+                <Button onClick={this.toggleCreation}>
+                    Créer un compte
+                </Button>
+            );
+        } else {
+            return (
+                <Button onClick={this.toggleCreation}>
+                    Se connecter
+                </Button>
+            );
+        }
+    }
+
+    renderAltTitle() {
+        if(!this.state.creation) {
+            return <h1>Connexion</h1>
+        } else {
+            return <h1>S'inscrire</h1>
+        }
+    }
+
+    toggleCreation = (event: any) => {
+        this.setState({
+          creation: !this.state.creation,
+        } as any);
     }
 }
 
